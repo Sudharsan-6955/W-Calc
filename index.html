@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Poppins:ital,wght@1,900&family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<!--Prebuild API -->
+<!-- OpenWeather -->
+<!-- https://api.openweathermap.org/data/2.5/weather?q=india&appid=774f5c8a792e05d8cfdf364b033e0dce&units=metric -->
+
+<body class=" font-[inter] ">
+    <div>
+        <p
+            class="font-bold text-2xl my-2 bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 bg-clip-text text-transparent flex justify-center">
+            CHECK WEATHER</p>
+    </div>
+    <div
+        class="container my-10 mx-auto   bg-gray-400 w-fit rounded-2xl px-10 max-md:px-2 max-md:p-4 p-5 bg-gradient-to-r from-cyan-500 to-blue-500">
+        <div class="search flex justify-between gap-1">
+            <input class="h-10 rounded-2xl w-full bg-white px-4 outline-none" type="search" name="" id=""
+                spellcheck="true">
+            <button class="icon p-2 rounded-2xl bg-white"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="error hidden ">
+            <p class="flex justify-center my-4">Invalid city name</p>
+        </div>
+        <div class="weather hidden">
+            <div class="deg">
+                <img src="../img/clear.png" alt="" class="wea-icon max-md:h-20 mx-auto flex justify-center">
+                <div class="justify-center flex my-3">
+                    <h1 class="temp max-md:text-6xl text-7xl text-amber-300">15°C</h1>
+                    <p class="city text-2xl">Thirunelveli</p>
+                </div>
+            </div>
+            <div class="details flex justify-between">
+                <div class="box flex gap-3">
+                    <img class="h-9 max-md:h-8" src="../img/humidity.png" alt="">
+                    <div class=" h-10">
+                        <p class="humadity text-sm">64%</p>
+                        <p class="text-sm">Humadity</p>
+                    </div>
+                </div>
+                <div class="box flex gap-3">
+                    <img src="../img/wind.png" class="h-10  max-md:h-8" alt="">
+                    <div class=" h-10">
+                        <p class="wind text-sm">64 km/h</p>
+                        <p class="text-sm">Wind speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const apikey = "774f5c8a792e05d8cfdf364b033e0dce";
+        const apiurl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchbox = document.querySelector(".search input");
+        const searchbtn = document.querySelector(".search button");
+        const weathericon = document.querySelector(".wea-icon");
+
+        async function checkweather(city) {
+            const response = await fetch(apiurl + city + `&appid=${apikey}`);
+
+            if (response.status == 404) {
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".weather").style.display = "none";
+
+
+            }
+            else {
+                var data = await response.json();
+
+
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+                document.querySelector(".humadity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + "Km/h";
+
+                if (data.weather[0].main == "Clouds") {
+                    weathericon.src = "../img/clouds.png";
+                }
+                else if (data.weather[0].main == "Clear") {
+                    weathericon.src = "../img/clear.png";
+                }
+                else if (data.weather[0].main == "Rain") {
+                    weathericon.src = "../img/rain.png";
+                }
+                else if (data.weather[0].main == "Drizzle") {
+                    weathericon.src = "../img/drizzle.png";
+                }
+                else if (data.weather[0].main == "Mist") {
+                    weathericon.src = "../img/mist.png";
+                }
+                document.querySelector(".weather").style.display = "block";
+                document.querySelector(".error").style.display = "none";
+
+
+            }
+
+
+        }
+
+
+
+        searchbtn.addEventListener("click", () => {
+            checkweather(searchbox.value);
+        })
+
+
+    </script>
+</body>
+
+</html>
